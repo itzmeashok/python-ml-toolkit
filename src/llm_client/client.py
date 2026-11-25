@@ -8,13 +8,14 @@ class OllamaClient:
         self.model = model
         self.endpoint = endpoint
 
-    def chat(self, system_prompt: str, user_prompt: str) -> str:
+    def chat(self, system_prompt: str, user_prompt: str, temperature: float = 0.7) -> str:
         body = {
             "model": self.model,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
+            "options": {"temperature": temperature},
             "stream": False,
         }
         response = httpx.post(self.endpoint, json=body, timeout=httpx.Timeout(120.0))

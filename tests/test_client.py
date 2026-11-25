@@ -19,14 +19,14 @@ def test_chat_returns_content(mock_post, client):
     mock_response.raise_for_status = MagicMock()
     mock_post.return_value = mock_response
 
-    result = client.chat("You are an engineer.", "Explain APIs")
+    result = client.chat("You are an engineer.", "Explain APIs", temperature=0.6)
 
     assert result == "An API is a contract..."
     mock_post.assert_called_once()
     call_kwargs = mock_post.call_args
+    assert call_kwargs.kwargs["json"]["options"]["temperature"] == 0.6
     assert call_kwargs.kwargs["json"]["model"] == "llama3.2:3b"
     assert call_kwargs.kwargs["json"]["messages"][0]["role"] == "system"
-
 
 @patch("llm_client.client.httpx.post")
 def test_chat_raises_on_error(mock_post, client):
